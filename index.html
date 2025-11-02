@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Theshan Bandaranayaka</title>
+  <style>
+    /* Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #091018;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      line-height: 1.6;
+    }
+
+    /* ---------------- HERO SECTION ---------------- */
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .left {
+      flex: 1;
+      min-width: 300px;
+      text-align: center;
+    }
+
+    .portrait {
+      width: 250px;
+      height: 250px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #4cc9f0;
+      box-shadow: 0 0 20px rgba(76, 201, 240, 0.5);
+      background: #091018;
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;   /* show full face */
+      object-position: center;
+    }
+
+    .greeting {
+      font-size: 1.2rem;
+      color: #aaa;
+      margin-bottom: 0.5rem;
+    }
+
+    .name {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4cc9f0;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #4cc9f0;
+      margin: 0 auto;
+      width: 0;
+      animation: typingLoop 8s steps(25, end) infinite, blink 0.7s step-end infinite;
+    }
+
+    @keyframes typingLoop {
+      0% { width: 0 }
+      40% { width: 100% }
+      70% { width: 100% }
+      90% { width: 0 }
+      100% { width: 0 }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent }
+    }
+
+    .icons {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .icons a img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: #1a2333;
+      padding: 8px;
+      transition: transform 0.3s ease, background 0.3s ease;
+      animation: bounce 2s infinite;
+    }
+
+    .icons a img:hover {
+      transform: scale(1.2);
+      background: #4cc9f0;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .right {
+      flex: 1;
+      min-width: 300px;
+      font-size: 1rem;
+      color: #ddd;
+    }
+
+    .right p { margin-bottom: 1rem; }
+    .right span { display: block; margin-top: 1rem; font-weight: bold; color: #4cc9f0; }
+
+    /* ---------------- SELECTED WORKS SECTION ---------------- */
+    .works {
+      padding: 4rem 2rem;
+      background: #0d141f;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 2rem;
+      color: #4cc9f0;
+    }
+
+    .sub-section { margin-bottom: 3rem; }
+    .sub-title { font-size: 1.6rem; margin-bottom: 1.5rem; color: #aaa; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .work-item {
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(76, 201, 240, 0.2);
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .work-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .work-item:hover img { transform: scale(1.1); }
+    .work-item.show { opacity: 1; transform: translateY(0); }
+
+    /* ---------------- RESPONSIVE ---------------- */
+    @media (max-width: 992px) {
+      .hero { flex-direction: column; text-align: center; }
+      .portrait { width: 200px; height: 200px; }
+      .name { font-size: 1.8rem; }
+      .right { font-size: 0.95rem; }
+    }
+
+    @media (max-width: 576px) {
+      .portrait { width: 150px; height: 150px; }
+      .name { font-size: 1.4rem; }
+      .greeting { font-size: 1rem; }
+      .icons a img { width: 40px; height: 40px; }
+      .section-title { font-size: 1.5rem; }
+      .sub-title { font-size: 1.1rem; }
+    }
+
+
+    /* Lightbox overlay */
+.lightbox {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background-color: rgba(0,0,0,0.9);
+  text-align: center;
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 80%;
+  margin: auto;
+  display: block;
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Close button */
+.close {
+  position: absolute;
+  top: 20px; right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Arrows */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 30px;
+  transition: 0.3s;
+  user-select: none;
+}
+
+.prev { left: 0; }
+.next { right: 0; }
+
+.prev:hover, .next:hover { color: #4cc9f0; }
+
+
+
+.about-contact {
+  display: grid;
+  grid-template-columns: 1fr 6px 1fr; 
+  width: 100%;
+  
+  color: #fff;
+  padding: 4rem 2rem;
+}
+
+
+.about-contact::before {
+  content: "";
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  background: #000;
+  width: 6px;
+  border-radius: 3px;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #4cc9f0;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+
+.whoami-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+  margin-left: 7%;
+  
+}
+
+
+
+.info-col h3,
+.contact-info h3 {
+  font-size: 1.1rem;
+  color: #ddd;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.info-col p,
+.contact-info p {
+  font-size: 1rem;
+  color: #ddd;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  text-align: left; 
+}
+
+.cv-btn {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.cv-btn a {
+    margin-left: -25%;
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background: #4cc9f0;
+  color: #091018;
+  font-weight: bold;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cv-btn a:hover {
+  background: #38a3c7;
+  transform: scale(1.05);
+}
+
+
+.contact-info {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.social-links a {
+  color: #4cc9f0;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #38a3c7;
+}
+
+
+@media (max-width: 992px) {
+  .about-contact {
+    grid-template-columns: 1fr;
+  }
+  .about-contact::before {
+    display: none;
+  }
+  .whoami-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .whoami-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-info {
+    text-align: left; /
+  }
+  .social-links {
+    justify-content: flex-start;
+  }
+}
+
+
+/* TOOLS SECTION */
+.tools {
+  width: 100%;
+  padding: 4rem 2rem;
+  background: #091018;
+  color: #fff;
+}
+
+.tools .section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  color: #4cc9f0;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Grid layout */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tool-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.tool-item p {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ddd;
+  margin: 0;
+}
+
+.tool-item:hover img {
+  transform: scale(1.1);
+}
+
+/* About block */
+    .about-block{
+      max-width:900px;margin:0 auto;
+      text-align:center;
+    }
+    .about-title{
+      font-size:22px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:0 0 12px;
+    }
+    .about-text{
+      font-size:18px;line-height:1.7;color:var(--muted);
+      max-width:70ch;margin:0 auto;
+      font-style:italic;
+    }
+
+    /* Responsive */
+    @media (max-width:640px){
+      .contact-btn{width:56px;height:56px;border-radius:12px}
+      .contact-icon{width:24px;height:24px}
+      .about-text{font-size:16px}
+    }
+
+    /* Footer */
+    footer{padding:32px 0;color:var(--muted);text-align:center;border-top:1px solid rgba(255,255,255,.06)}
+
+    /* Scroll reveal animations */
+    .reveal{opacity:0;transform:translateY(16px);animation:revealUp .9s ease forwards}
+    .reveal.delay-1{animation-delay:.15s}
+    .reveal.delay-2{animation-delay:.3s}
+    .reveal.delay-3{animation-delay:.45s}
+    @keyframes revealUp{
+      to{opacity:1;transform:translateY(0)}
+    }
+
+
+
+
+  </style>
+</head>
+<body>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="left">
+      <div class="portrait">
+        <img src="Potrait.jpeg" alt="Theshan Bandaranayaka Portrait" />
+      </div>
+      <div class="greeting">Hello There, I AM</div>
+      <div class="name">THESHAN BANDARANAYAKA</div>
+      <div class="icons">
+        <a class="contact-btn" href="https://wa.me/94729595364" target="_blank" rel="noopener" title="WhatsApp"><img class="contact-icon" src="WH.png" alt="WhatsApp"></a>
+        <a href="mailto:theshan.bandaranayaka2003@gmail.com"><img src="Mail.png" alt="Email"></a>
+        <!-- <a href="https://goo.gl/maps/yourlocation" target="_blank"><img src="location-icon.jpg" alt="Location"></a> -->
+        <a href="https://www.linkedin.com/in/theshan-bandaranayaka-0bb436281?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><img src="LIN@.png" alt="LinkedIn"></a>
+      </div>
+    </div>
+
+    <div class="right">
+      <p>
+        I Am 22 Years Old Designer Who Wanting to Create Extraordinary Designs and Get More and More Experience of Exciting Waters of Designing. Knowledge with Image Manipulation, Vector Graphics, Sound and Video Editing, Photography and Videography.
+      </p>
+      <p>I am on a Mission to make Ordinary into Extraordinary.</p>
+      <span>- Theshan</span>
+    </div>
+  </section>
+
+  
+
+  <!-- SELECTED WORKS SECTION -->
+  <section class="works">
+    <h2 class="section-title">Selected Works</h2>
+
+    <!-- Designs -->
+    <div class="sub-section">
+      <h3 class="sub-title">Designs</h3>
+      <div class="grid">
+        <div class="work-item"><img src="bookcover1.jpg" alt="Design 1"></div>
+        <div class="work-item"><img src="MagezineAI1.jpg" alt="Design 2"></div>
+        <div class="work-item"><img src="masking1.jpg" alt="Design 3"></div>
+        <div class="work-item"><img src="POSTPNG1.png" alt="Design 4"></div>
+        <div class="work-item"><img src="STUDIO1.jpg" alt="Design 5"></div>
+        <div class="work-item"><img src="Zombie1.jpg" alt="Design 6"></div>
+      </div>
+    </div>
+
+    <!-- Photographs -->
+    <div class="sub-section">
+      <h3 class="sub-title">Photographs</h3>
+      <div class="grid">
+        <div class="work-item"><img src="p2.JPG" alt="Photo 1"></div>
+        <div class="work-item"><img src="Photography2.jpg" alt="Photo 2"></div>
+        <div class="work-item"><img src="PP2.jpg" alt="Photo 3"></div>
+        <div class="work-item"><img src="PPP2.jpg" alt="Photo 4"></div>
+        <div class="work-item"><img src="PPPP2.jpg" alt="Photo 5"></div>
+         <div class="work-item"><img src="PPPPP2.jpg" alt="Photo 5"></div>
+
+         <!-- Lightbox Overlay -->
+<div id="lightbox" class="lightbox">
+  <span class="close">&times;</span>
+  <img class="lightbox-content" id="lightbox-img" alt="">
+  <a class="prev">&#10094;</a>
+  <a class="next">&#10095;</a>
+</div>
+</section>
+
+
+<!-- TOOLS SECTION -->
+<section class="tools">
+  <h2 class="section-title">TOOLS</h2>
+  <div class="tools-grid">
+    <div class="tool-item">
+      <img src="PS.png" alt="Adobe Photoshop">
+      <p>Photoshop</p>
+    </div>
+    <div class="tool-item">
+      <img src="AI.png" alt="Adobe Illustrator">
+      <p>Illustrator</p>
+    </div>
+    <div class="tool-item">
+      <img src="AU.png" alt="Adobe Audition">
+      <p>Audition</p>
+    </div>
+    <div class="tool-item">
+      <img src="DDR.png" alt="DaVinci Resolve">
+      <p>DaVinci Resolve</p>
+    </div>
+    <div class="tool-item">
+      <img src="CU.png" alt="CapCut">
+      <p>CapCut</p>
+    </div>
+    <div class="tool-item">
+      <img src="VSC.png" alt="Visual Studio Code">
+      <p>VS Code</p>
+    </div>
+    <div class="tool-item">
+      <img src="W.png" alt="Microsoft Word">
+      <p>MS Word</p>
+    </div>
+    <div class="tool-item">
+      <img src="PPT.png" alt="Microsoft PowerPoint">
+      <p>PowerPoint</p>
+    </div>
+  </div>
+</section>
+
+
+<section class="about-contact">
+  <!-- WHO AM I -->
+  <div class="whoami">
+    <h2 class="section-title">WHO AM I</h2>
+    <div class="whoami-grid">
+      <div class="info-col">
+        <h3>NAME</h3>
+        <p>THESHAN BANDARANAYAKA</p>
+
+        <h3>AGE</h3>
+        <p>22 YEARS OLD</p>
+
+        <h3>LIVE IN</h3>
+        <p>Kottawa, COLOMBO</p>
+      </div>
+
+      <div class="info-col">
+        <h3>EDUCATION</h3>
+        <p>B.A. (Hons) Creative Multimedia Design — NIBM (Pursuing)</p>
+        <p>O/Ls — Dharmapala College Pannipitiya</p>
+      </div>
+
+      <div class="info-col">
+        <h3>SKILLS</h3>
+        <p>Digital image and Image manipulation, Video Editing</p>
+        <p>Sound Design, Photography, Videography</p>
+        <p>Able to work with "AI"</p>
+        <p>Knowledge about HTML, CSS</p>
+      </div>
+    </div>
+
+    <div class="cv-btn">
+      <a href="CVDOC.pdf" download>DOWNLOAD CV</a>
+    </div>
+  </div>
+
+  <!-- CONTACT ME -->
+  <div class="contactme">
+    <h2 class="section-title">CONTACT ME</h2>
+    <div class="contact-info">
+      <h3>EMAIL</h3>
+      <p>theshanb67@gmail.com</p>
+
+      <h3>PHONE</h3>
+      <p>+94 702 865 364</p>
+
+      <h3>ADDRESS</h3>
+      <p>Gammana, Ganemulla Road, Kandyama, Kottawa, Colombo</p>
+
+      
+  </div>
+</section>
+
+
+
+
+
+ <!-- About Me -->
+    <div class="about-block">
+      <div class="about-title">ABOUT ME</div>
+      <p class="about-text">
+        “Hello, My name is Theshan. I’m a 22 year old designer who wanting to create extrordinary designs and get more and
+        more experience of exciting waters of designing. Knowledge with image manupulation, vector graphics, sound, video Editing 
+        photography and videography, I'm on a mission to make odinary into extraordinary”
+      </p>
+    </div>
+  </main>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap">
+      © 2025 — Designed by Theshan. Minimal design, maximum clarity.
+    </div>
+  </footer>
+
+  <!-- Optional: smooth scroll via CSS only -->
+  <style>
+    html{scroll-behavior:smooth}
+  </style>
+
+
+
+
+
+
+
+
+<script>
+  const items = document.querySelectorAll('.work-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  items.forEach(item => observer.observe(item));
+</script>
+
+<script>
+  const workItems = document.querySelectorAll('.work-item img');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeBtn = document.querySelector('.close');
+  const prevBtn = document.querySelector('.prev');
+  const nextBtn = document.querySelector('.next');
+
+  let currentIndex = 0;
+
+  // Open lightbox
+  workItems.forEach((img, index) => {
+    img.addEventListener('click', () => {
+      lightbox.style.display = 'block';
+      lightboxImg.src = img.src;
+      currentIndex = index;
+    });
+  });
+
+  // Close lightbox
+  closeBtn.addEventListener('click', () => {
+    lightbox.style.display = 'none';
+  });
+
+  // Navigate
+  function showImage(index) {
+    if (index < 0) index = workItems.length - 1;
+    if (index >= workItems.length) index = 0;
+    lightboxImg.src = workItems[index].src;
+    currentIndex = index;
+  }
+
+  prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
+  nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (lightbox.style.display === 'block') {
+      if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+      if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+      if (e.key === 'Escape') lightbox.style.display = 'none';
+    }
+  });
+</script>
+
+
+</body>
+</html>
